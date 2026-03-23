@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador GPU Argentina | DONKI Hardware</title>
+    <style>
+        :root { --primary: #00ff88; --bg: #0b0b0b; --card: #161616; --text: #e0e0e0; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        .ads-placeholder { width: 100%; max-width: 728px; height: 90px; border: 1px dashed #333; margin: 20px 0; display: flex; align-items: center; justify-content: center; color: #444; font-size: 11px; background: #111; text-transform: uppercase; letter-spacing: 1px; }
+
+        .card { background: var(--card); padding: 30px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); width: 100%; max-width: 500px; border: 1px solid #222; }
+        
+        h1 { color: var(--primary); text-align: center; margin-top: 0; font-size: 26px; font-weight: 800; }
+        p.subtitle { text-align: center; color: #777; font-size: 14px; margin-bottom: 30px; }
+        
+        label { display: block; margin: 15px 0 8px; font-weight: 600; color: #aaa; font-size: 14px; }
+        
+        select, input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; font-size: 16px; outline: none; transition: 0.3s; }
+        select:focus { border-color: var(--primary); }
+        
+        button { width: 100%; padding: 16px; background: var(--primary); border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 30px; transition: 0.3s; font-size: 16px; color: #000; text-transform: uppercase; }
+        button:hover { background: #00cc6e; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,255,136,0.3); }
+
+        #resultado { margin-top: 30px; padding: 25px; background: #1f1f1f; border-radius: 16px; border: 1px solid var(--primary); display: none; text-align: center; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .precio-label { font-size: 14px; color: #aaa; margin-bottom: 5px; }
+        .precio { font-size: 38px; color: var(--primary); font-weight: 900; display: block; }
+
+        .info-footer { max-width: 600px; margin-top: 50px; padding: 20px; border-top: 1px solid #222; color: #666; font-size: 13px; text-align: center; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <div class="ads-placeholder">Espacio para Google AdSense (Banner Superior)</div>
+
+    <div class="card">
+        <h1>Cotizá tu GPU</h1>
+        <p class="subtitle">Calculá el valor real de tu placa en el mercado usado.</p>
+        
+        <label>Modelo de Placa de Video:</label>
+        <select id="gpu">
+            <optgroup label="NVIDIA RTX 40-Series">
+                <option value="rtx4090">GeForce RTX 4090</option>
+                <option value="rtx4080">GeForce RTX 4080</option>
+                <option value="rtx4070">GeForce RTX 4070 / Super</option>
+                <option value="rtx4060">GeForce RTX 4060 / Ti</option>
+            </optgroup>
+            <optgroup label="NVIDIA RTX 30-Series">
+                <option value="rtx3090">GeForce RTX 3090</option>
+                <option value="rtx3080">GeForce RTX 3080</option>
+                <option value="rtx3070">GeForce RTX 3070</option>
+                <option value="rtx3060ti">GeForce RTX 3060 Ti</option>
+                <option value="rtx3060" selected>GeForce RTX 3060</option>
+                <option value="rtx3050">GeForce RTX 3050</option>
+            </optgroup>
+            <optgroup label="NVIDIA Viejas Glorias">
+                <option value="rtx2060">GeForce RTX 2060</option>
+                <option value="gtx1660s">GeForce GTX 1660 Super</option>
+                <option value="gtx1080ti">GeForce GTX 1080 Ti</option>
+                <option value="gtx1060">GeForce GTX 1060 6GB</option>
+            </optgroup>
+            <optgroup label="AMD Radeon RX">
+                <option value="rx7900xt">Radeon RX 7900 XT</option>
+                <option value="rx7800xt">Radeon RX 7800 XT</option>
+                <option value="rx6800xt">Radeon RX 6800 XT</option>
+                <option value="rx6700xt">Radeon RX 6700 XT</option>
+                <option value="rx6600">Radeon RX 6600</option>
+                <option value="rx580">Radeon RX 580 / 570</option>
+            </optgroup>
+        </select>
+
+        <label>¿Fue usada para minería?</label>
+        <select id="uso">
+            <option value="1.0">No, solo Gaming / Trabajo</option>
+            <option value="0.78">Sí, se usó para Minar (-22%)</option>
+        </select>
+
+        <label>Tiempo de uso (años):</label>
+        <input type="number" id="anios" value="1" min="0" max="10">
+
+        <button onclick="calcular()">Calcular Valor Ahora</button>
+
+        <div id="resultado">
+            <span class="precio-label">Precio estimado de venta:</span>
+            <span class="precio" id="precioFinal">$0</span>
+            <p style="color: #888; font-size: 12px; margin-top: 15px;">Cotización basada en valores de mercado actualizados.</p>
+        </div>
+    </div>
+
+    <div class="ads-placeholder">Espacio para Google AdSense (Bloque Inferior)</div>
+
+    <div class="info-footer">
+        <strong>DONKI Hardware - Herramienta de Tasación v2.0</strong><br>
+        Los precios son sugeridos y pueden variar según la marca (ASUS, MSI, EVGA), el estado físico y si se cuenta con la caja original. Se recomienda realizar pruebas de estrés antes de comprar/vender hardware usado.
+    </div>
+
+    <script>
+        // PRECIOS BASE (Ajustá estos valores según el dólar en Argentina)
+        const PRECIOS_BASE = {
+            // NVIDIA 40
+            "rtx4090": 2100000, "rtx4080": 1450000, "rtx4070": 850000, "rtx4060": 480000,
+            // NVIDIA 30
+            "rtx3090": 950000, "rtx3080": 720000, "rtx3070": 520000, "rtx3060ti": 410000, "rtx3060": 360000, "rtx3050": 280000,
+            // NVIDIA Legacy
+            "rtx2060": 240000, "gtx1660s": 195000, "gtx1080ti": 220000, "gtx1060": 135000,
+            // AMD
+            "rx7900xt": 1100000, "rx7800xt": 790000, "rx6800xt": 610000, "rx6700xt": 420000, "rx6600": 290000, "rx580": 115000
+        };
+
+        function calcular() {
+            const gpu = document.getElementById('gpu').value;
+            const precioBase = PRECIOS_BASE[gpu];
+            const factorUso = parseFloat(document.getElementById('uso').value);
+            const anios = parseInt(document.getElementById('anios').value);
+
+            // Devaluación del 10% por año
+            let factorAnios = 1 - (anios * 0.10);
+            if (factorAnios < 0.35) factorAnios = 0.35; // Valor residual mínimo
+
+            let final = precioBase * factorUso * factorAnios;
+
+            document.getElementById('precioFinal').innerText = "$" + Math.round(final).toLocaleString('es-AR');
+            document.getElementById('resultado').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
